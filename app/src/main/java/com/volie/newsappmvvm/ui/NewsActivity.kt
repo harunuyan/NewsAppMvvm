@@ -1,7 +1,8 @@
-package com.volie.newsappmvvm
+package com.volie.newsappmvvm.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.volie.newsappmvvm.R
 
 class NewsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
