@@ -39,6 +39,9 @@ android {
             google()
         }
     }
+    viewBinding {
+        enabled true
+    }
 }
 
 dependencies {
