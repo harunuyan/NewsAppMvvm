@@ -1,4 +1,4 @@
-package com.volie.newsappmvvm.model
+package com.volie.newsappmvvm.models
 
 data class Source(
     val id: String,

@@ -1,4 +1,4 @@
-package com.volie.newsappmvvm.model
+package com.volie.newsappmvvm.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
