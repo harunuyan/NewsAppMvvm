@@ -12,18 +12,21 @@ class BreakingNewsViewModel(context: Context) : ViewModel() {
 
     val mDataLayerHelper = DataLayerHelper(context)
     val mBreakingNews = MutableLiveData<List<Article>>()
-
     val mLoadingData = MutableLiveData<Boolean>()
+    var mBreakingNewsPage = 1
 
 
-    suspend fun getBreakingNewsFromRemote(): List<Article> {
-        return mDataLayerHelper.repository.getNews()
+    private suspend fun getBreakingNewsFromRemote(
+        countryCode: String,
+        pageNumber: Int
+    ): List<Article> {
+        return mDataLayerHelper.repository.getBreakingNews(countryCode, pageNumber)
     }
 
-    fun getBreakingNews() {
+    fun getBreakingNews(countryCode: String) {
         mLoadingData.postValue(false)
         viewModelScope.launch {
-            val remoteData = getBreakingNewsFromRemote()
+            val remoteData = getBreakingNewsFromRemote(countryCode, mBreakingNewsPage)
             if (remoteData.isEmpty()) {
                 mLoadingData.postValue(true)
             } else {

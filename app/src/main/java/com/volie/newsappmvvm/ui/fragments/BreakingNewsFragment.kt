@@ -14,7 +14,7 @@ class BreakingNewsFragment : Fragment() {
     private var _mBinding: FragmentBreakingNewsBinding? = null
     private val mBinding get() = _mBinding!!
     private lateinit var mViewModel: BreakingNewsViewModel
-    private val mAdapter = NewsAdapter()
+    private lateinit var mAdapter: NewsAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,13 +27,16 @@ class BreakingNewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mViewModel = BreakingNewsViewModel(requireContext())
         setupAdapter()
-        mViewModel.getBreakingNews()
+        mViewModel.getBreakingNews("us")
         initObserver()
     }
 
     private fun setupAdapter() {
-        mBinding.rvBreakingNews.adapter = mAdapter
-        mBinding.rvBreakingNews.layoutManager = LinearLayoutManager(requireContext())
+        mAdapter = NewsAdapter()
+        with(mBinding.rvBreakingNews) {
+            adapter = mAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
     }
 
     private fun initObserver() {
