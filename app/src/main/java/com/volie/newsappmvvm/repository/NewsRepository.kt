@@ -20,7 +20,7 @@ class NewsRepository(
             }.getOrNull()
             if (result?.isSuccessful == true) {
                 val list = result.body()?.articles.orEmpty()
-//                articleDao.insert(list)
+                articleDao.insert(list)
                 list
             } else {
                 emptyList()
