@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.volie.newsappmvvm.databinding.FragmentSearchNewsBinding
+import com.volie.newsappmvvm.models.Article
 import com.volie.newsappmvvm.ui.adapters.NewsAdapter
 import com.volie.newsappmvvm.viewmodels.SearchNewsViewModel
 
-class SearchNewsFragment : Fragment() {
+class SearchNewsFragment : Fragment(), NewsAdapter.Listener {
     private var _mBinding: FragmentSearchNewsBinding? = null
     private val mBinding get() = _mBinding!!
     private lateinit var mViewModel: SearchNewsViewModel
@@ -40,7 +42,7 @@ class SearchNewsFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        mAdapter = NewsAdapter()
+        mAdapter = NewsAdapter(this)
         with(mBinding.rvSearchNews) {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
@@ -64,5 +66,14 @@ class SearchNewsFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _mBinding = null
+    }
+
+    override fun onItemClick(article: Article) {
+        val bundle = Bundle().apply {
+            putSerializable("article", article)
+        }
+        val action =
+            SearchNewsFragmentDirections.actionSearchNewsFragmentToArticleFragment(article)
+        Navigation.findNavController(mBinding.root).navigate(action)
     }
 }

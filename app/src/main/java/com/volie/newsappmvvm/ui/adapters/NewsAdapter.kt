@@ -7,9 +7,14 @@ import com.bumptech.glide.Glide
 import com.volie.newsappmvvm.databinding.ItemArticlePreviewBinding
 import com.volie.newsappmvvm.models.Article
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
+class NewsAdapter(private val listener: Listener) :
+    RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
     private val newsList: MutableList<Article> = mutableListOf()
+
+    interface Listener {
+        fun onItemClick(article: Article)
+    }
 
     inner class ArticleViewHolder(private val binding: ItemArticlePreviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -21,6 +26,9 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
                 tvTitle.text = article.title
                 tvDescription.text = article.description
                 tvPublishedAt.text = article.publishedAt
+                root.setOnClickListener {
+                    listener.onItemClick(newsList[position])
+                }
             }
         }
     }

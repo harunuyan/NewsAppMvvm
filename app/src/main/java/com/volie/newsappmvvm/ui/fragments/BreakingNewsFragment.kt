@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.volie.newsappmvvm.databinding.FragmentBreakingNewsBinding
+import com.volie.newsappmvvm.models.Article
 import com.volie.newsappmvvm.ui.adapters.NewsAdapter
 import com.volie.newsappmvvm.viewmodels.BreakingNewsViewModel
 
-class BreakingNewsFragment : Fragment() {
+class BreakingNewsFragment : Fragment(), NewsAdapter.Listener {
     private var _mBinding: FragmentBreakingNewsBinding? = null
     private val mBinding get() = _mBinding!!
     private lateinit var mViewModel: BreakingNewsViewModel
@@ -32,7 +34,7 @@ class BreakingNewsFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        mAdapter = NewsAdapter()
+        mAdapter = NewsAdapter(this)
         with(mBinding.rvBreakingNews) {
             adapter = mAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -58,5 +60,14 @@ class BreakingNewsFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _mBinding = null
+    }
+
+    override fun onItemClick(article: Article) {
+        val bundle = Bundle().apply {
+            putSerializable("article", article)
+        }
+        val action =
+            BreakingNewsFragmentDirections.actionBreakingNewsFragmentToArticleFragment(article)
+        Navigation.findNavController(mBinding.root).navigate(action)
     }
 }
