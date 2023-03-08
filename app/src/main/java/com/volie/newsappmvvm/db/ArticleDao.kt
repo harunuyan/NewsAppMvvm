@@ -8,7 +8,7 @@ import com.volie.newsappmvvm.models.Article
 interface ArticleDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(list: List<Article>)
+    suspend fun saveArticle(article: Article)
 
     @Query("SELECT * FROM articles")
     fun getAllArticles(): LiveData<List<Article>>
