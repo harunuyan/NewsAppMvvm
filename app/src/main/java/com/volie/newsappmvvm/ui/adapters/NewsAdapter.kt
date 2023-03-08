@@ -2,6 +2,8 @@ package com.volie.newsappmvvm.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.volie.newsappmvvm.databinding.ItemArticlePreviewBinding
@@ -10,8 +12,6 @@ import com.volie.newsappmvvm.models.Article
 class NewsAdapter(private val listener: Listener) :
     RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
-    private val newsList: MutableList<Article> = mutableListOf()
-
     interface Listener {
         fun onItemClick(article: Article)
     }
@@ -19,7 +19,7 @@ class NewsAdapter(private val listener: Listener) :
     inner class ArticleViewHolder(private val binding: ItemArticlePreviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bindData(position: Int) {
-            val article = newsList[position]
+            val article = differ.currentList[position]
             binding.apply {
                 Glide.with(this.root).load(article.urlToImage).into(ivArticleImage)
                 tvSource.text = article.source?.name
@@ -27,7 +27,7 @@ class NewsAdapter(private val listener: Listener) :
                 tvDescription.text = article.description
                 tvPublishedAt.text = article.publishedAt
                 root.setOnClickListener {
-                    listener.onItemClick(newsList[position])
+                    listener.onItemClick(differ.currentList[position])
                 }
             }
         }
@@ -47,13 +47,19 @@ class NewsAdapter(private val listener: Listener) :
         holder.bindData(position)
     }
 
-    override fun getItemCount(): Int {
-        return newsList.size
+    private val differCallBack = object : DiffUtil.ItemCallback<Article>() {
+        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
+            return oldItem == newItem
+        }
     }
 
-    fun setData(items: List<Article>) {
-        newsList.clear()
-        newsList.addAll(items)
-        notifyDataSetChanged()
+    val differ = AsyncListDiffer(this, differCallBack)
+
+    override fun getItemCount(): Int {
+        return differ.currentList.size
     }
 }

@@ -43,7 +43,7 @@ class BreakingNewsFragment : Fragment(), NewsAdapter.Listener {
 
     private fun initObserver() {
         mViewModel.mBreakingNews.observe(viewLifecycleOwner) {
-            mAdapter.setData(it)
+            mAdapter.differ.submitList(it)
         }
 
         mViewModel.mLoadingData.observe(viewLifecycleOwner) {
@@ -63,9 +63,7 @@ class BreakingNewsFragment : Fragment(), NewsAdapter.Listener {
     }
 
     override fun onItemClick(article: Article) {
-        val bundle = Bundle().apply {
-            putSerializable("article", article)
-        }
+        Bundle().putSerializable("article", article)
         val action =
             BreakingNewsFragmentDirections.actionBreakingNewsFragmentToArticleFragment(article)
         Navigation.findNavController(mBinding.root).navigate(action)
