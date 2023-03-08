@@ -21,7 +21,6 @@ class NewsRepository(
             }.getOrNull()
             if (result?.isSuccessful == true) {
                 val list = result.body()?.articles.orEmpty()
-                articleDao.insert(list)
                 list
             } else {
                 emptyList()
@@ -44,4 +43,10 @@ class NewsRepository(
             }
         }
     }
+
+    suspend fun saveArticle(article: Article) = articleDao.saveArticle(article)
+
+    fun getSavedNews() = articleDao.getAllArticles()
+    suspend fun deleteArticle(article: Article) = articleDao.deleteArticle(article)
+
 }
